@@ -15,10 +15,10 @@ void setup() {
   int len = dowker.length;
   for (int i=0; i<len; i++) {
     nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 0));// center
-    nodes.add(new Node(400+200*cos(PI*2*i/len)+10, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 1));// right
-    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)-10, 2*i+1, dowker[i], i, 2));// top
-    nodes.add(new Node(400+200*cos(PI*2*i/len)-10, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 3));// left
-    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)+10, 2*i+1, dowker[i], i, 4));// bottom
+    nodes.add(new Node(400+200*cos(PI*2*i/len)+30, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 1));// right
+    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)-30, 2*i+1, dowker[i], i, 2));// top
+    nodes.add(new Node(400+200*cos(PI*2*i/len)-30, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 3));// left
+    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)+30, 2*i+1, dowker[i], i, 4));// bottom
     edges.add(new Edge(5*i, 5*i+1)); 
     edges.add(new Edge(5*i, 5*i+2)); 
     edges.add(new Edge(5*i, 5*i+3)); 
@@ -31,13 +31,19 @@ void setup() {
   // a,b は１始まり
   for (int i=0; i<len; i++) {
     for (int j=i+1; j<len; j++) {
-      Node n1 = nodes.get(i);
-      Node n2 = nodes.get(j);
-      if (abs(n1.a-abs(n2.b))==1 || abs(n1.b-abs(n2.a))==1) {
-        edges.add(new Edge(i, j));
+      Node n1 = nodes.get(5*i);
+      Node n2 = nodes.get(5*j);
+      if(n2.b == n1.a-1 || n2.b == n1.a+2*len-1){
+        edges.add(new Edge(5*i+1, 5*j+4));
       }
-      if (abs(n1.a-abs(n2.b))==2*len-1 || abs(n1.b-abs(n2.a))==2*len-1) {
-        edges.add(new Edge(i, j));
+      else if (n2.b == n1.a+1 ) {
+        edges.add(new Edge(5*i+3, 5*j+2));
+      }
+      if(n1.b == n2.a-1 || n1.b == n2.a+2*len-1){
+        edges.add(new Edge(5*i+4, 5*j+1));
+      }
+      else if (n1.b == n2.a+1 ) {
+        edges.add(new Edge(5*i+2, 5*j+3));
       }
     }
   }
@@ -55,7 +61,7 @@ void draw() {
   }
   for (int n=0; n<nodes.size(); n++) {
     Node nn = nodes.get(n);
-    if (nn == draggedNode) {
+    if (n == draggedNodeID) {
       fill(255, 0, 255);
     } else {
       fill(0, 0, 255);
@@ -79,6 +85,11 @@ class Node {
     nodeID = _nID;
     branchID = _bID;
   }
+  
+}
+
+Node getNode( int _nID, int _bID){
+  return nodes.get(_nID*5 + _bID);
 }
 
 class Edge {
@@ -91,27 +102,47 @@ class Edge {
   }
 }
 
-Node draggedNode=null;
+int draggedNodeID = -1;
+boolean isCenter = false;
 
 void mousePressed() {
   for (int n=0; n<nodes.size(); n++) {
     Node nn = nodes.get(n);
     if (dist(nn.x, nn.y, mouseX, mouseY)<10) {
-      draggedNode = nn;
+      if( n%5==0){
+        isCenter = true;
+      } else {
+        isCenter = false;
+      }
+      draggedNodeID = n;
       return ;
     }
   }
 }
 
 void mouseDragged() {
-  if (draggedNode != null) {
+  if(draggedNodeID ==-1){
+    return ;
+  }
+  Node draggedNode = nodes.get(draggedNodeID);
+  float dx = mouseX - draggedNode.x;
+  float dy = mouseY - draggedNode.y;
+  if(isCenter){
+    draggedNode.x = mouseX;
+    draggedNode.y = mouseY;
+    for(int k = 1; k<=4; k++){
+      draggedNode = nodes.get(draggedNodeID+k);
+      draggedNode.x += dx;
+      draggedNode.y += dy;
+    }
+  } else {
     draggedNode.x = mouseX;
     draggedNode.y = mouseY;
   }
 }
 
 void mouseReleased() {
-  draggedNode = null;
+  draggedNodeID = -1;
 }
 
 void keyPressed() {
@@ -175,7 +206,7 @@ void findOuter() {
     seq[a] = -1;
   }
   int seqCount=0;
-  int startA = 7;
+  int startA = 0;
   int startN = findNfromA(startA, nSize);
 
   int pA, qA;

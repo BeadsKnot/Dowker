@@ -48,7 +48,20 @@ void setup() {
     }
   }
   //Floyd_Warshall();
-  findOuter();
+  //findOuter();
+  //findTriangle();
+  outer= new int[10];
+  outerCount = 10;
+  outer[0] = 3;
+  outer[1] = 2;
+  outer[2] = 13;
+  outer[3] = 12;
+  outer[4] = 38;
+  outer[5] = 37;
+  outer[6] = 8;
+  outer[7] = 9;
+  outer[8] = 26;
+  outer[9] = 27;
 }
 
 void draw() {
@@ -68,7 +81,8 @@ void draw() {
     }
     stroke(0);
     ellipse(nn.x, nn.y, 10, 10);
-    text(""+nn.a+","+nn.b, nn.x+10, nn.y+10);
+    //text(""+nn.a+","+nn.b, nn.x+10, nn.y+10);
+    text(""+n, nn.x+10, nn.y+10);
   }
 }
 
@@ -152,18 +166,52 @@ void keyPressed() {
 int outer[];
 int outerCount=0;
 
-void findOutTriangle() {
+//void findOutTriangle() {
+//  int nSize = nodes.size();
+//  outer= new int[nSize];
+//  for (int a=0; a<nSize; a++) {
+//    outer[a] = -1;
+//  }
+//  for (int a=0; a<nSize && outer[0] == -1; a++) {
+//    for (int b=a+1; b<nSize && outer[0] == -1; b++) {
+//      for (int c=b+1; c<nSize && outer[0] == -1; c++) {
+//        boolean eab=false; 
+//        boolean ebc=false; 
+//        boolean eca=false; 
+//        for (int e=0; e<edges.size(); e++) {
+//          Edge ee = edges.get(e);
+//          if (ee.s == a && ee.t == b ) eab = true; 
+//          else if (ee.s == b && ee.t == a ) eab = true; 
+//          else if (ee.s == b && ee.t == c ) ebc = true; 
+//          else if (ee.s == c && ee.t == b ) ebc = true; 
+//          else if (ee.s == c && ee.t == a ) eca = true; 
+//          else if (ee.s == a && ee.t == c ) eca = true;
+//        }
+//        if (eab && ebc && eca) {
+//          println("三角形見つけた！");
+//          outer[0]=a;
+//          outer[1]=b;
+//          outer[2]=c;
+//        }
+//      }
+//    }
+//  }
+//  //edges.add(new Edge(1,10));
+//  outerCount=3;
+//}
+
+void findTriangle() {
   int nSize = nodes.size();
   outer= new int[nSize];
   for (int a=0; a<nSize; a++) {
     outer[a] = -1;
   }
-  for (int a=0; a<nSize && outer[0] == -1; a++) {
-    for (int b=a+1; b<nSize && outer[0] == -1; b++) {
-      for (int c=b+1; c<nSize && outer[0] == -1; c++) {
+  for (int a=0; a<nSize && outer[0] == -1; a+=5) {
+    for (int b=a+5; b<nSize && outer[0] == -1; b+=5) {
+      for (int c=b+5; c<nSize && outer[0] == -1; c+=5) {
         boolean eab=false; 
         boolean ebc=false; 
-        boolean eca=false; 
+        boolean eca=false;
         for (int e=0; e<edges.size(); e++) {
           Edge ee = edges.get(e);
           if (ee.s == a && ee.t == b ) eab = true; 
@@ -199,52 +247,52 @@ int findNfromA(int a, int nSize) {
   return 0;
 }  
 
-void findOuter() {
-  int nSize = nodes.size();
-  int []seq= new int[nSize];
-  for (int a=0; a<nSize; a++) {
-    seq[a] = -1;
-  }
-  int seqCount=0;
-  int startA = 0;
-  int startN = findNfromA(startA, nSize);
+//void findOuter() {
+//  int nSize = nodes.size();
+//  int []seq= new int[nSize];
+//  for (int a=0; a<nSize; a++) {
+//    seq[a] = -1;
+//  }
+//  int seqCount=0;
+//  int startA = 0;
+//  int startN = findNfromA(startA, nSize);
 
-  int pA, qA;
-  int pN, qN;
-  pA=startA;
-  pN=startN;
-  qA=add1(pA, nSize);
-  qN=findNfromA(qA, nSize);
-  seq[seqCount++]=pN;
-  println(pA, pN, qA, qN);
-  boolean cont=true;
-  do {
-    int rA = (nodes.get(qN).a == qA)? nodes.get(qN).b: nodes.get(qN).a;
-    pA=rA;
-    pN=qN;
-    qA=add1(pA, nSize);
-    qN=findNfromA(qA, nSize);
-    println(pA, pN, qA, qN);
-    seq[seqCount++]=pN;
-    cont = true;
-    for (int r=0; r<seqCount; r++) {
-      if (seq[r] == qN) {
-        cont = false;
-        break;
-      }
-    }
-  } while (cont);
-  for (int r=0; r<seqCount; r++) {
-    print(seq[r]+" ");
-  }
-  println();
-}
+//  int pA, qA;
+//  int pN, qN;
+//  pA=startA;
+//  pN=startN;
+//  qA=add1(pA, nSize);
+//  qN=findNfromA(qA, nSize);
+//  seq[seqCount++]=pN;
+//  println(pA, pN, qA, qN);
+//  boolean cont=true;
+//  do {
+//    int rA = (nodes.get(qN).a == qA)? nodes.get(qN).b: nodes.get(qN).a;
+//    pA=rA;
+//    pN=qN;
+//    qA=add1(pA, nSize);
+//    qN=findNfromA(qA, nSize);
+//    println(pA, pN, qA, qN);
+//    seq[seqCount++]=pN;
+//    cont = true;
+//    for (int r=0; r<seqCount; r++) {
+//      if (seq[r] == qN) {
+//        cont = false;
+//        break;
+//      }
+//    }
+//  } while (cont);
+//  for (int r=0; r<seqCount; r++) {
+//    print(seq[r]+" ");
+//  }
+//  println();
+//}
 
 void modify1() {
   int len = nodes.size();
   //三角形を探す
-  findOuter();
-  for (int a=0; a<outerCount; a++) {
+  //findOuter(); 探し済み 
+  for (int a=0; a<outerCount; a++) { //<>//
     nodes.get(outer[a]).x = 400 + 300*cos(PI*2*a/outerCount);
     nodes.get(outer[a]).y = 400 - 300*sin(PI*2*a/outerCount);
   }
@@ -297,9 +345,9 @@ void modify1() {
   }
 }
 
-int countAIntersection() {
-  return 0;
-}
+//int countAIntersection() {
+//  return 0;
+//}
 
 //参考文献
 //https://www2.cs.arizona.edu/~kpavlou/Tutte_Embedding.pdf

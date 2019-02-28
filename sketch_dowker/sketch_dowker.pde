@@ -68,9 +68,11 @@ class Node {
 
 class Edge {
   int s, t;
+  boolean visible;
   Edge(int _s, int _t) {
     s=_s;
     t=_t;
+    visible = true;
   }
 }
 

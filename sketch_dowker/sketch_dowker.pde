@@ -14,7 +14,12 @@ void setup() {
   edges = new ArrayList<Edge>();
   int len = dowker.length;
   for (int i=0; i<len; i++) {
-    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len), 2*i+1, dowker[i]));
+    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len), 2*i+1, dowker[i]));// center
+    nodes.add(new Node(400+200*cos(PI*2*i/len)+10, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i]));// right
+    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)-10, 2*i+1, dowker[i]));// top
+    nodes.add(new Node(400+200*cos(PI*2*i/len)-10, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i]));// left
+    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)+10, 2*i+1, dowker[i]));// bottom
+    
   }
   for (int i=0; i<len; i++) {
     for (int j=i+1; j<len; j++) {

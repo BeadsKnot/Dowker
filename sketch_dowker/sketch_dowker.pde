@@ -14,24 +14,30 @@ void setup() {
   edges = new ArrayList<Edge>();
   int len = dowker.length;
   for (int i=0; i<len; i++) {
-    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len), 2*i+1, dowker[i]));// center
-    nodes.add(new Node(400+200*cos(PI*2*i/len)+10, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i]));// right
-    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)-10, 2*i+1, dowker[i]));// top
-    nodes.add(new Node(400+200*cos(PI*2*i/len)-10, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i]));// left
-    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)+10, 2*i+1, dowker[i]));// bottom
-    
+    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 0));// center
+    nodes.add(new Node(400+200*cos(PI*2*i/len)+10, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 1));// right
+    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)-10, 2*i+1, dowker[i], i, 2));// top
+    nodes.add(new Node(400+200*cos(PI*2*i/len)-10, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 3));// left
+    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)+10, 2*i+1, dowker[i], i, 4));// bottom
+    edges.add(new Edge(5*i, 5*i+1)); 
+    edges.add(new Edge(5*i, 5*i+2)); 
+    edges.add(new Edge(5*i, 5*i+3)); 
+    edges.add(new Edge(5*i, 5*i+4)); 
+    edges.add(new Edge(5*i+1, 5*i+2)); 
+    edges.add(new Edge(5*i+2, 5*i+3)); 
+    edges.add(new Edge(5*i+3, 5*i+4)); 
+    edges.add(new Edge(5*i+4, 5*i+1)); 
   }
+  // a,b は１始まり
   for (int i=0; i<len; i++) {
     for (int j=i+1; j<len; j++) {
       Node n1 = nodes.get(i);
       Node n2 = nodes.get(j);
       if (abs(n1.a-abs(n2.b))==1 || abs(n1.b-abs(n2.a))==1) {
         edges.add(new Edge(i, j));
-        //println(i, j);
       }
       if (abs(n1.a-abs(n2.b))==2*len-1 || abs(n1.b-abs(n2.a))==2*len-1) {
         edges.add(new Edge(i, j));
-        //println(i, j);
       }
     }
   }
@@ -63,11 +69,15 @@ void draw() {
 class Node {
   int a, b;
   float x, y;
-  Node(float _x, float _y, int _i, int _j) {
+  int nodeID;//奇数
+  int branchID;// 1: 奇数-1, 2:偶数-1, 3:奇数+1, 4:偶数+1
+  Node(float _x, float _y, int _i, int _j, int _nID, int _bID) {
     x=_x;
     y=_y;
     a=_i;
     b=_j;
+    nodeID = _nID;
+    branchID = _bID;
   }
 }
 

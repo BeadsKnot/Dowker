@@ -19,14 +19,14 @@ void setup() {
     nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)-30, 2*i+1, dowker[i], i, 2));// top
     nodes.add(new Node(400+200*cos(PI*2*i/len)-30, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 3));// left
     nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)+30, 2*i+1, dowker[i], i, 4));// bottom
-    edges.add(new Edge(5*i, 5*i+1)); 
-    edges.add(new Edge(5*i, 5*i+2)); 
-    edges.add(new Edge(5*i, 5*i+3)); 
-    edges.add(new Edge(5*i, 5*i+4)); 
-    edges.add(new Edge(5*i+1, 5*i+2)); 
-    edges.add(new Edge(5*i+2, 5*i+3)); 
-    edges.add(new Edge(5*i+3, 5*i+4)); 
-    edges.add(new Edge(5*i+4, 5*i+1)); 
+    edges.add(new Edge(5*i, 5*i+1, true)); 
+    edges.add(new Edge(5*i, 5*i+2, true)); 
+    edges.add(new Edge(5*i, 5*i+3, true)); 
+    edges.add(new Edge(5*i, 5*i+4, true)); 
+    edges.add(new Edge(5*i+1, 5*i+2, false)); 
+    edges.add(new Edge(5*i+2, 5*i+3, false)); 
+    edges.add(new Edge(5*i+3, 5*i+4, false)); 
+    edges.add(new Edge(5*i+4, 5*i+1, false)); 
   }
   // a,b は１始まり
   for (int i=0; i<len; i++) {
@@ -34,16 +34,16 @@ void setup() {
       Node n1 = nodes.get(5*i);
       Node n2 = nodes.get(5*j);
       if(n2.b == n1.a-1 || n2.b == n1.a+2*len-1){
-        edges.add(new Edge(5*i+1, 5*j+4));
+        edges.add(new Edge(5*i+1, 5*j+4, true));
       }
       else if (n2.b == n1.a+1 ) {
-        edges.add(new Edge(5*i+3, 5*j+2));
+        edges.add(new Edge(5*i+3, 5*j+2, true));
       }
       if(n1.b == n2.a-1 || n1.b == n2.a+2*len-1){
-        edges.add(new Edge(5*i+4, 5*j+1));
+        edges.add(new Edge(5*i+4, 5*j+1, true));
       }
       else if (n1.b == n2.a+1 ) {
-        edges.add(new Edge(5*i+2, 5*j+3));
+        edges.add(new Edge(5*i+2, 5*j+3, true));
       }
     }
   }
@@ -51,26 +51,44 @@ void setup() {
   //findOuter();
   //findTriangle();
   outer= new int[10];
-  outerCount = 10;
-  outer[0] = 3;
+  outerCount = 6;
+  //outer[0] = 3;
+  //outer[1] = 2;
+  //outer[2] = 13;
+  //outer[3] = 12;
+  //outer[4] = 38;
+  //outer[5] = 37;
+  //outer[6] = 8;
+  //outer[7] = 9;
+  //outer[8] = 26;
+  //outer[9] = 27;
+  //outer[0] = 33;
+  //outer[1] = 32;
+  //outer[2] = 48;
+  //outer[3] = 47;
+  //outer[4] = 28;
+  //outer[5] = 29;
+  //outer[6] = 6;
+  //outer[7] = 7;
+  //outer[8] = 23;
+  //outer[9] = 22;
+  outer[0] = 1;
   outer[1] = 2;
   outer[2] = 13;
-  outer[3] = 12;
-  outer[4] = 38;
-  outer[5] = 37;
-  outer[6] = 8;
-  outer[7] = 9;
-  outer[8] = 26;
-  outer[9] = 27;
+  outer[3] = 14;
+  outer[4] = 41;
+  outer[5] = 44;
 }
 
 void draw() {
   background(200);
   for (int e=0; e<edges.size(); e++) {
     Edge ee = edges.get(e);
-    Node ees = nodes.get(ee.s);
-    Node eet = nodes.get(ee.t);
-    line (ees.x, ees.y, eet.x, eet.y);
+    if(ee.visible){
+      Node ees = nodes.get(ee.s);
+      Node eet = nodes.get(ee.t);
+      line (ees.x, ees.y, eet.x, eet.y);
+    }
   }
   for (int n=0; n<nodes.size(); n++) {
     Node nn = nodes.get(n);
@@ -80,7 +98,7 @@ void draw() {
       fill(0, 0, 255);
     }
     stroke(0);
-    ellipse(nn.x, nn.y, 10, 10);
+    ellipse(nn.x, nn.y, 5, 5);
     //text(""+nn.a+","+nn.b, nn.x+10, nn.y+10);
     text(""+n, nn.x+10, nn.y+10);
   }
@@ -109,10 +127,10 @@ Node getNode( int _nID, int _bID){
 class Edge {
   int s, t;
   boolean visible;
-  Edge(int _s, int _t) {
+  Edge(int _s, int _t, boolean _v) {
     s=_s;
     t=_t;
-    visible = true;
+    visible = _v;
   }
 }
 

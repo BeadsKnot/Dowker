@@ -48,15 +48,20 @@ void setup() {
   }
   outer= new int[20];
   findTriangle();
+  modify1();
+  modify1();
+  // ここで，外周を探しなおす．
+  findOuter();
+  modify1();
 }
 
 float cX = 400, cY = 400, rate=1.0;
 
-float dispX(float x){
+float dispX(float x) {
   float xx = x;
   return (xx-cX)*rate + 400;
 }
-float dispY(float y){
+float dispY(float y) {
   float yy = y;
   return (yy-cY)*rate + 400;
 }
@@ -105,9 +110,9 @@ Node getNode( int _nID, int _bID) {
   return nodes.get(_nID*5 + _bID);
 }
 
-void debugXY(int k){
-  for(int i=k; i<k+5; i++){
-    println(i,nodes.get(i).x,nodes.get(i).y);
+void debugXY(int k) {
+  for (int i=k; i<k+5; i++) {
+    println(i, nodes.get(i).x, nodes.get(i).y);
   }
 }
 
@@ -165,20 +170,17 @@ void mouseReleased() {
 }
 
 void keyPressed() {
-  if(key=='n'){
+  if (key=='n') {
     cX=cY=400;
     rate=1.0;
-  }else if(key=='m'){
+  } else if (key=='m') {
     cX=((mouseX-400)/rate)+cX;
     cY=((mouseY-400)/rate)+cY;
     rate *=2.0;
-  }else {
+  } else {
     modify1();
-    //debugXY(30);
   }
 }
-
-
 
 void findTriangle() {
   int nSize = nodes.size();
@@ -227,11 +229,15 @@ void findTriangle() {
           outer[4]=eBC_c;
           outer[5]=eCA_c;
           outerCount=6;
-          return ; 
+          return ;
         }
       }
     }
   }
+}
+
+void findOuter() {
+  return ;
 }
 
 int add1(int a, int nSize) {
@@ -247,51 +253,9 @@ int findNfromA(int a, int nSize) {
   return 0;
 }  
 
-//void findOuter() {
-//  int nSize = nodes.size();
-//  int []seq= new int[nSize];
-//  for (int a=0; a<nSize; a++) {
-//    seq[a] = -1;
-//  }
-//  int seqCount=0;
-//  int startA = 0;
-//  int startN = findNfromA(startA, nSize);
-
-//  int pA, qA;
-//  int pN, qN;
-//  pA=startA;
-//  pN=startN;
-//  qA=add1(pA, nSize);
-//  qN=findNfromA(qA, nSize);
-//  seq[seqCount++]=pN;
-//  println(pA, pN, qA, qN);
-//  boolean cont=true;
-//  do {
-//    int rA = (nodes.get(qN).a == qA)? nodes.get(qN).b: nodes.get(qN).a;
-//    pA=rA;
-//    pN=qN;
-//    qA=add1(pA, nSize);
-//    qN=findNfromA(qA, nSize);
-//    println(pA, pN, qA, qN);
-//    seq[seqCount++]=pN;
-//    cont = true;
-//    for (int r=0; r<seqCount; r++) {
-//      if (seq[r] == qN) {
-//        cont = false;
-//        break;
-//      }
-//    }
-//  } while (cont);
-//  for (int r=0; r<seqCount; r++) {
-//    print(seq[r]+" ");
-//  }
-//  println();
-//}
-
 void modify1() {
   int len = nodes.size();
-  //三角形を探す
-  //findOuter(); 探し済み 
+  //外周は固定する
   for (int a=0; a<outerCount; a++) {
     nodes.get(outer[a]).x = 400 + 300*cos(PI*2*a/outerCount);
     nodes.get(outer[a]).y = 400 - 300*sin(PI*2*a/outerCount);
@@ -345,57 +309,6 @@ void modify1() {
   }
 }
 
-//int countAIntersection() {
-//  return 0;
-//}
-
 //参考文献
 //https://www2.cs.arizona.edu/~kpavlou/Tutte_Embedding.pdf
 //これはかなりわかりやすい！！
-void TutteEmbedding() {
-  int len = nodes.size();
-  int mat[][] = new int[len][len];
-  //行列を作る
-
-
-  //三角形を探す
-  for (int a=0; a<len; a++) {
-    for (int b=a+1; b<len; b++) {
-      for (int c=b+1; c<len; c++) {
-      }
-    }
-  }
-}
-
-// ノード間のグラフ距離を計算する。
-// http://www.prefield.com/algorithm/graph/floyd_warshall.html
-void Floyd_Warshall() {
-  int INF = 10000;
-  int nSize = nodes.size();
-  int[][] d = new int[nSize][nSize];
-  for (int n1=0; n1<nSize; ++n1) {
-    for (int n2=0; n2<nSize; ++n2) {
-      if (n1==n2) d[n1][n2]=0;
-      else d[n1][n2] = INF;
-    }
-  }
-  int eSize = edges.size();
-  for (int e=0; e<eSize; ++e) {
-    Edge ee = edges.get(e);
-    d[ee.s][ee.t] = d[ee.t][ee.s] = 1;
-  }
-
-  for (int k=0; k<nSize; ++k) {
-    for (int n1=0; n1<nSize; ++n1) {
-      for (int n2=0; n2<nSize; ++n2) {
-        d[n1][n2] = min(d[n1][n2], d[n1][k]+d[k][n2]);
-      }
-    }
-  }
-  for (int n1=0; n1<nSize; ++n1) {
-    for (int n2=0; n2<nSize; ++n2) {
-      print(d[n1][n2]+" ");
-    }
-    println();
-  }
-}

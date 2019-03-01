@@ -15,11 +15,11 @@ void setup() {
   edges = new ArrayList<Edge>();
   int len = dowker.length;
   for (int i=0; i<len; i++) {
-    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 0));// center
-    nodes.add(new Node(400+200*cos(PI*2*i/len)+30, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 1));// right
-    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)-30, 2*i+1, dowker[i], i, 2));// top
-    nodes.add(new Node(400+200*cos(PI*2*i/len)-30, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 3));// left
-    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)+30, 2*i+1, dowker[i], i, 4));// bottom
+    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 0, (dowker[i]>0)));// center
+    nodes.add(new Node(400+200*cos(PI*2*i/len)+30, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 1, (dowker[i]>0)));// right
+    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)-30, 2*i+1, dowker[i], i, 2, (dowker[i]>0)));// top
+    nodes.add(new Node(400+200*cos(PI*2*i/len)-30, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 3, (dowker[i]>0)));// left
+    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)+30, 2*i+1, dowker[i], i, 4, (dowker[i]>0)));// bottom
     edges.add(new Edge(5*i, 5*i+1, true)); 
     edges.add(new Edge(5*i, 5*i+2, true)); 
     edges.add(new Edge(5*i, 5*i+3, true)); 
@@ -95,13 +95,15 @@ class Node {
   float x, y;
   int nodeID;//奇数
   int branchID;// 1: 奇数-1, 2:偶数-1, 3:奇数+1, 4:偶数+1
-  Node(float _x, float _y, int _i, int _j, int _nID, int _bID) {
+  boolean ou;// true: 奇数が上， false: 偶数が上
+  Node(float _x, float _y, int _i, int _j, int _nID, int _bID, boolean _ou) {
     x=_x;
     y=_y;
     a=_i;
     b=_j;
     nodeID = _nID;
     branchID = _bID;
+    ou = _ou;
   }
 }
 
@@ -381,6 +383,8 @@ void modify1() {
     }
   }
 }
+
+
 
 //参考文献
 //https://www2.cs.arizona.edu/~kpavlou/Tutte_Embedding.pdf

@@ -1,7 +1,7 @@
 //int dowker[]={6, 10, 12, 2, 4, 8}; //<>//
 //int dowker[]={4,8,14,16,2,18,20,22,10,12,6};
-int dowker[]={4, 10, 12, 14, 22, 2, 18, 20, 8, 6, 16};
-//int dowker[]={6, 8, 16, 14, 4, 18, 20, 2, 22, 12, 10};
+//int dowker[]={4, 10, 12, 14, 22, 2, 18, 20, 8, 6, 16};
+int dowker[]={6, 8, 16, 14, 4, 18, 20, 2, 22, 12, 10};
 //int dowker[] = {6, 10, 16, 18, 14, 2, 20, 4, 22, 12, 8};
 //int dowker[] = {6, 12, 16, 18, 14, 4, 20, 22, 2, 8, 10};
 ArrayList<Node> nodes;
@@ -52,6 +52,7 @@ void setup() {
   // ここで，外周を探しなおす．
   findOuter();
   modify1();
+  outputFile("test.txt");
 }
 
 float cX = 400, cY = 400, rate=1.0;
@@ -282,8 +283,8 @@ int findNext(int p, int q) {
 void findOuter() {
   int outer_sub[] = new int[nodes.size()];
   int outer_sub_count=0;
-  for(int pp=0; pp<nodes.size(); pp+=5){
-    for(int qq=pp+1; qq<pp+5; qq++){
+  for (int pp=0; pp<nodes.size(); pp+=5) {
+    for (int qq=pp+1; qq<pp+5; qq++) {
       int p=pp;
       int q=qq;
       outer_sub_count=0;
@@ -296,14 +297,14 @@ void findOuter() {
         } else {
           p=q;
           q=r;
-          if(q%5 != 0){
+          if (q%5 != 0) {
             outer_sub[outer_sub_count] = q;
             outer_sub_count++;
           }
         }
       }
-      if(outer_sub_count>outerCount){
-        for(int k=0; k<outer_sub_count; k++){
+      if (outer_sub_count>outerCount) {
+        for (int k=0; k<outer_sub_count; k++) {
           outer[k] = outer_sub[k];
           print(outer_sub[k]+" ");
         }
@@ -384,6 +385,73 @@ void modify1() {
   }
 }
 
+
+void outputFile(String filename) {
+  PrintWriter file;
+  file = createWriter(filename);
+  file.println("BeadsKnot,0");
+  file.println("Nodes,"+nodes.size());
+  for (int n=0; n<nodes.size(); n++) {
+    Node nn = nodes.get(n);
+    file.print(nn.x+","+nn.y+",");
+    if (n%5 == 0) {
+      if (nn.ou) {
+        file.print(-atan2(nodes.get(n+1).y-nodes.get(n).y, nodes.get(n+1).x-nodes.get(n).x)+",");
+      } else {
+        file.print(-atan2(nodes.get(n+2).y-nodes.get(n).y, nodes.get(n+1).x-nodes.get(n).x)+",");
+      }
+    } else {
+      int n0 = (int(n/5)*5);
+      file.print((-atan2(nodes.get(n0).y-nodes.get(n).y, nodes.get(n0).x-nodes.get(n).x))+",");
+    }
+    file.println("10.0,10.0,10.0,10.0");
+  }
+  int eCount=0;
+  for (int e=0; e<edges.size(); e++) {
+    Edge ee = edges.get(e);
+    if (ee.visible) {
+      eCount ++;
+    }
+  }
+  file.println("Edges,"+eCount);
+  for (int e=0; e<edges.size(); e++) {
+    Edge ee = edges.get(e);
+    if (ee.visible) {
+      if (ee.s%5==0) {
+        int s0 = ee.s; 
+        float aX = nodes.get(s0+2).x - nodes.get(s0+1).x;
+        float aY = nodes.get(s0+2).y - nodes.get(s0+1).y;
+        float bX = nodes.get(s0+4).x - nodes.get(s0+1).x;
+        float bY = nodes.get(s0+4).y - nodes.get(s0+1).y;
+        float orientation = aX*bY - aY*bX;
+        int t=ee.t-ee.s;
+        file.print(ee.s+",");
+        if (orientation<0) {
+          if (nodes.get(ee.s).ou) {
+            t = (t+7)%4;
+          } else {
+            t = (t+6)%4;
+          }
+        }else {
+          if (nodes.get(ee.s).ou) {
+            t = (5-t)%4;
+          } else {
+            t = (6-t)%4;
+          }
+        }
+        file.print(t+",");
+        file.print(ee.t+",0");
+      } else {
+        file.print( ee.s+",2,");
+        file.print( ee.t+",2");
+      }
+      file.println();
+    }
+  }
+  file.println("BeadsKnotEnd");
+  file.flush();
+  file.close();
+}
 
 
 //参考文献

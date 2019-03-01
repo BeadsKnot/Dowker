@@ -7,6 +7,7 @@ int dowker[]={6, 8, 16, 14, 4, 18, 20, 2, 22, 12, 10};
 ArrayList<Node> nodes;
 ArrayList<Edge>edges;
 
+PVector sphereVec[];
 
 void setup() {
   size(800, 800);
@@ -45,27 +46,9 @@ void setup() {
       }
     }
   }
-  //Floyd_Warshall();
-  //findOuter();
-  outer= new int[10];
-  findTriangle();
-  //outerCount = 8;
-  //outer[0] = 11;
-  //outer[1] = 14;
-  //outer[2] = 41;
-  //outer[3] = 42;
-  //outer[4] = 53;
-  //outer[5] = 52;
-  //outer[6] = 23;
-  //outer[7] = 24;
-
-  //outerCount = 6;
-  //outer[0] = 1;
-  //outer[1] = 2;
-  //outer[2] = 13;
-  //outer[3] = 14;
-  //outer[4] = 41;
-  //outer[5] = 44;
+  sphereVec = new PVector[nodes.size()];
+  //outer= new int[10];
+  //findTriangle();
 }
 
 void draw() {
@@ -86,7 +69,7 @@ void draw() {
       fill(0, 0, 255);
     }
     stroke(0);
-    //ellipse(nn.x, nn.y, 5, 5);
+    ellipse(nn.x, nn.y, 5, 5);
     //text(""+nn.a+","+nn.b, nn.x+10, nn.y+10);
     text(""+n, nn.x+10, nn.y+10);
   }
@@ -171,39 +154,6 @@ void keyPressed() {
 int outer[];
 int outerCount=0;
 
-//void findOutTriangle() {
-//  int nSize = nodes.size();
-//  outer= new int[nSize];
-//  for (int a=0; a<nSize; a++) {
-//    outer[a] = -1;
-//  }
-//  for (int a=0; a<nSize && outer[0] == -1; a++) {
-//    for (int b=a+1; b<nSize && outer[0] == -1; b++) {
-//      for (int c=b+1; c<nSize && outer[0] == -1; c++) {
-//        boolean eab=false; 
-//        boolean ebc=false; 
-//        boolean eca=false; 
-//        for (int e=0; e<edges.size(); e++) {
-//          Edge ee = edges.get(e);
-//          if (ee.s == a && ee.t == b ) eab = true; 
-//          else if (ee.s == b && ee.t == a ) eab = true; 
-//          else if (ee.s == b && ee.t == c ) ebc = true; 
-//          else if (ee.s == c && ee.t == b ) ebc = true; 
-//          else if (ee.s == c && ee.t == a ) eca = true; 
-//          else if (ee.s == a && ee.t == c ) eca = true;
-//        }
-//        if (eab && ebc && eca) {
-//          println("三角形見つけた！");
-//          outer[0]=a;
-//          outer[1]=b;
-//          outer[2]=c;
-//        }
-//      }
-//    }
-//  }
-//  //edges.add(new Edge(1,10));
-//  outerCount=3;
-//}
 
 void findTriangle() {
   int nSize = nodes.size();
@@ -272,46 +222,11 @@ int findNfromA(int a, int nSize) {
   return 0;
 }  
 
-//void findOuter() {
-//  int nSize = nodes.size();
-//  int []seq= new int[nSize];
-//  for (int a=0; a<nSize; a++) {
-//    seq[a] = -1;
-//  }
-//  int seqCount=0;
-//  int startA = 0;
-//  int startN = findNfromA(startA, nSize);
+void makeSphereCoord(){
+  
+  
+}
 
-//  int pA, qA;
-//  int pN, qN;
-//  pA=startA;
-//  pN=startN;
-//  qA=add1(pA, nSize);
-//  qN=findNfromA(qA, nSize);
-//  seq[seqCount++]=pN;
-//  println(pA, pN, qA, qN);
-//  boolean cont=true;
-//  do {
-//    int rA = (nodes.get(qN).a == qA)? nodes.get(qN).b: nodes.get(qN).a;
-//    pA=rA;
-//    pN=qN;
-//    qA=add1(pA, nSize);
-//    qN=findNfromA(qA, nSize);
-//    println(pA, pN, qA, qN);
-//    seq[seqCount++]=pN;
-//    cont = true;
-//    for (int r=0; r<seqCount; r++) {
-//      if (seq[r] == qN) {
-//        cont = false;
-//        break;
-//      }
-//    }
-//  } while (cont);
-//  for (int r=0; r<seqCount; r++) {
-//    print(seq[r]+" ");
-//  }
-//  println();
-//}
 
 void modify1() {
   int len = nodes.size();
@@ -367,60 +282,5 @@ void modify1() {
         nn.y += dy[n];
       }
     }
-  }
-}
-
-//int countAIntersection() {
-//  return 0;
-//}
-
-//参考文献
-//https://www2.cs.arizona.edu/~kpavlou/Tutte_Embedding.pdf
-//これはかなりわかりやすい！！
-void TutteEmbedding() {
-  int len = nodes.size();
-  int mat[][] = new int[len][len];
-  //行列を作る
-
-
-  //三角形を探す
-  for (int a=0; a<len; a++) {
-    for (int b=a+1; b<len; b++) {
-      for (int c=b+1; c<len; c++) {
-      }
-    }
-  }
-}
-
-// ノード間のグラフ距離を計算する。
-// http://www.prefield.com/algorithm/graph/floyd_warshall.html
-void Floyd_Warshall() {
-  int INF = 10000;
-  int nSize = nodes.size();
-  int[][] d = new int[nSize][nSize];
-  for (int n1=0; n1<nSize; ++n1) {
-    for (int n2=0; n2<nSize; ++n2) {
-      if (n1==n2) d[n1][n2]=0;
-      else d[n1][n2] = INF;
-    }
-  }
-  int eSize = edges.size();
-  for (int e=0; e<eSize; ++e) {
-    Edge ee = edges.get(e);
-    d[ee.s][ee.t] = d[ee.t][ee.s] = 1;
-  }
-
-  for (int k=0; k<nSize; ++k) {
-    for (int n1=0; n1<nSize; ++n1) {
-      for (int n2=0; n2<nSize; ++n2) {
-        d[n1][n2] = min(d[n1][n2], d[n1][k]+d[k][n2]);
-      }
-    }
-  }
-  for (int n1=0; n1<nSize; ++n1) {
-    for (int n2=0; n2<nSize; ++n2) {
-      print(d[n1][n2]+" ");
-    }
-    println();
   }
 }

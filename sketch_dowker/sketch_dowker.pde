@@ -1,12 +1,13 @@
 //int dowker[]={6, 10, 12, 2, 4, 8}; //<>//
 //int dowker[]={4,8,14,16,2,18,20,22,10,12,6};
-//int dowker[]={4, 10, 12, 14, 22, 2, 18, 20, 8, 6, 16};
-int dowker[]={6, 8, 16, 14, 4, 18, 20, 2, 22, 12, 10};
+int dowker[]={4, 10, 12, 14, 22, 2, 18, 20, 8, 6, 16};
+//int dowker[]={6, 8, 16, 14, 4, 18, 20, 2, 22, 12, 10};
 //int dowker[] = {6, 10, 16, 18, 14, 2, 20, 4, 22, 12, 8};
 //int dowker[] = {6, 12, 16, 18, 14, 4, 20, 22, 2, 8, 10};
 ArrayList<Node> nodes;
 ArrayList<Edge>edges;
-
+int outer[];
+int outerCount=0;
 
 void setup() {
   size(800, 800);
@@ -45,28 +46,21 @@ void setup() {
       }
     }
   }
-  //Floyd_Warshall();
-  //findOuter();
-  outer= new int[10];
+  outer= new int[20];
   findTriangle();
-  //outerCount = 8;
-  //outer[0] = 11;
-  //outer[1] = 14;
-  //outer[2] = 41;
-  //outer[3] = 42;
-  //outer[4] = 53;
-  //outer[5] = 52;
-  //outer[6] = 23;
-  //outer[7] = 24;
-
-  //outerCount = 6;
-  //outer[0] = 1;
-  //outer[1] = 2;
-  //outer[2] = 13;
-  //outer[3] = 14;
-  //outer[4] = 41;
-  //outer[5] = 44;
 }
+
+float cX = 400, cY = 400, rate=1.0;
+
+float dispX(float x){
+  float xx = x;
+  return (xx-cX)*rate + 400;
+}
+float dispY(float y){
+  float yy = y;
+  return (yy-cY)*rate + 400;
+}
+
 
 void draw() {
   background(200);
@@ -75,7 +69,7 @@ void draw() {
     if (ee.visible) {
       Node ees = nodes.get(ee.s);
       Node eet = nodes.get(ee.t);
-      line (ees.x, ees.y, eet.x, eet.y);
+      line (dispX(ees.x), dispY(ees.y), dispX(eet.x), dispY(eet.y));
     }
   }
   for (int n=0; n<nodes.size(); n++) {
@@ -86,9 +80,9 @@ void draw() {
       fill(0, 0, 255);
     }
     stroke(0);
-    //ellipse(nn.x, nn.y, 5, 5);
+    ellipse(dispX(nn.x), dispY(nn.y), 5, 5);
     //text(""+nn.a+","+nn.b, nn.x+10, nn.y+10);
-    text(""+n, nn.x+10, nn.y+10);
+    text(""+n, dispX(nn.x)+10, dispY(nn.y)+10);
   }
 }
 
@@ -109,6 +103,12 @@ class Node {
 
 Node getNode( int _nID, int _bID) {
   return nodes.get(_nID*5 + _bID);
+}
+
+void debugXY(int k){
+  for(int i=k; i<k+5; i++){
+    println(i,nodes.get(i).x,nodes.get(i).y);
+  }
 }
 
 class Edge {
@@ -165,45 +165,20 @@ void mouseReleased() {
 }
 
 void keyPressed() {
-  modify1();
+  if(key=='n'){
+    cX=cY=400;
+    rate=1.0;
+  }else if(key=='m'){
+    cX=((mouseX-400)/rate)+cX;
+    cY=((mouseY-400)/rate)+cY;
+    rate *=2.0;
+  }else {
+    modify1();
+    //debugXY(30);
+  }
 }
 
-int outer[];
-int outerCount=0;
 
-//void findOutTriangle() {
-//  int nSize = nodes.size();
-//  outer= new int[nSize];
-//  for (int a=0; a<nSize; a++) {
-//    outer[a] = -1;
-//  }
-//  for (int a=0; a<nSize && outer[0] == -1; a++) {
-//    for (int b=a+1; b<nSize && outer[0] == -1; b++) {
-//      for (int c=b+1; c<nSize && outer[0] == -1; c++) {
-//        boolean eab=false; 
-//        boolean ebc=false; 
-//        boolean eca=false; 
-//        for (int e=0; e<edges.size(); e++) {
-//          Edge ee = edges.get(e);
-//          if (ee.s == a && ee.t == b ) eab = true; 
-//          else if (ee.s == b && ee.t == a ) eab = true; 
-//          else if (ee.s == b && ee.t == c ) ebc = true; 
-//          else if (ee.s == c && ee.t == b ) ebc = true; 
-//          else if (ee.s == c && ee.t == a ) eca = true; 
-//          else if (ee.s == a && ee.t == c ) eca = true;
-//        }
-//        if (eab && ebc && eca) {
-//          println("三角形見つけた！");
-//          outer[0]=a;
-//          outer[1]=b;
-//          outer[2]=c;
-//        }
-//      }
-//    }
-//  }
-//  //edges.add(new Edge(1,10));
-//  outerCount=3;
-//}
 
 void findTriangle() {
   int nSize = nodes.size();

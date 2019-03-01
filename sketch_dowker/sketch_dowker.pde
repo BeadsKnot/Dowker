@@ -1,7 +1,7 @@
 //int dowker[]={6, 10, 12, 2, 4, 8}; //<>//
 //int dowker[]={4,8,14,16,2,18,20,22,10,12,6};
-//int dowker[]={4, 10, 12, 14, 22, 2, 18, 20, 8, 6, 16};
-int dowker[]={6, 8, 16, 14, 4, 18, 20, 2, 22, 12, 10};
+int dowker[]={4, 10, 12, 14, 22, 2, 18, 20, 8, 6, 16};
+//int dowker[]={6, 8, 16, 14, 4, 18, 20, 2, 22, 12, 10};
 //int dowker[] = {6, 10, 16, 18, 14, 2, 20, 4, 22, 12, 8};
 //int dowker[] = {6, 12, 16, 18, 14, 4, 20, 22, 2, 8, 10};
 ArrayList<Node> nodes;
@@ -48,7 +48,6 @@ void setup() {
   }
   outer= new int[20];
   findTriangle();
-  modify1();
   modify1();
   // ここで，外周を探しなおす．
   findOuter();
@@ -258,10 +257,8 @@ int findNext(int p, int q) {
     float by = yp3 - yp;
     float orientation = ax*by - ay*bx;
     if (orientation>0) {
-//      print("a");
       return p3;
     } else {
-//      print("b");
       return p1;
     }
   } else {
@@ -269,11 +266,9 @@ int findNext(int p, int q) {
       Edge ee = edges.get(e);
       if (ee.visible) {
         if (ee.s==q && ee.t!=p) {
-//          print("c("+ee.s+","+ee.t+")");
           return ee.t;
         }
         if (ee.t==q && ee.s!=p) {
-//          print("d("+ee.t+","+ee.s+")");
           return ee.s;
         }
       }
@@ -340,7 +335,7 @@ void modify1() {
   }
   float dx[] = new float [len];
   float dy[] = new float [len];
-  for (int repeat=0; repeat<1000; repeat++) {
+  for (int repeat=0; repeat<2000; repeat++) {
     for (int n=0; n<len; n++) {
       dx[n] = dy[n] = 0f;
     }

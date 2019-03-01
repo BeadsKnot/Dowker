@@ -1,7 +1,7 @@
 //int dowker[]={6, 10, 12, 2, 4, 8}; //<>//
 //int dowker[]={4,8,14,16,2,18,20,22,10,12,6};
-int dowker[]={4, 10, 12, 14, 22, 2, 18, 20, 8, 6, 16};
-//int dowker[]={6, 8, 16, 14, 4, 18, 20, 2, 22, 12, 10};
+//int dowker[]={4, 10, 12, 14, 22, 2, 18, 20, 8, 6, 16};
+int dowker[]={6, 8, 16, 14, 4, 18, 20, 2, 22, 12, 10};
 //int dowker[] = {6, 10, 16, 18, 14, 2, 20, 4, 22, 12, 8};
 //int dowker[] = {6, 12, 16, 18, 14, 4, 20, 22, 2, 8, 10};
 ArrayList<Node> nodes;
@@ -283,19 +283,36 @@ int findNext(int p, int q) {
 }
 
 void findOuter() {
-  
-  int p=0;
-  int q=1;
-  
-  print(p+" "+q+" ");
-  for (int repeat=0; repeat<nodes.size(); repeat++) {
-    int r=findNext(p, q);
-    print(r+" ");
-    if (r==p) {
-      break;
-    } else {
-      p=q;
-      q=r;
+  int outer_sub[] = new int[nodes.size()];
+  int outer_sub_count=0;
+  for(int pp=0; pp<nodes.size(); pp+=5){
+    for(int qq=pp+1; qq<pp+5; qq++){
+      int p=pp;
+      int q=qq;
+      outer_sub_count=0;
+      outer_sub[outer_sub_count] = q;
+      outer_sub_count++;
+      for (int repeat=0; repeat<nodes.size(); repeat++) {
+        int r=findNext(p, q);
+        if (r==pp) {
+          break;
+        } else {
+          p=q;
+          q=r;
+          if(q%5 != 0){
+            outer_sub[outer_sub_count] = q;
+            outer_sub_count++;
+          }
+        }
+      }
+      if(outer_sub_count>outerCount){
+        for(int k=0; k<outer_sub_count; k++){
+          outer[k] = outer_sub[k];
+          print(outer_sub[k]+" ");
+        }
+        outerCount = outer_sub_count;
+        println("("+outer_sub_count+")");
+      }
     }
   }
   return ;

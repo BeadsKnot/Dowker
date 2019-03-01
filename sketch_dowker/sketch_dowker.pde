@@ -236,7 +236,68 @@ void findTriangle() {
   }
 }
 
+int findNext(int p, int q) {
+  if (q%5 ==0) {
+    float xp=nodes.get(p).x - nodes.get(q).x;
+    float yp=nodes.get(p).y - nodes.get(q).y;
+    int p1 = p+1;
+    if (p1-q>=5) {
+      p1 -= 4;
+    }
+    float xp1=nodes.get(p1).x - nodes.get(q).x;
+    float yp1=nodes.get(p1).y - nodes.get(q).y;
+    int p3 = p+3;
+    if (p3-q>=5) {
+      p3 -= 4;
+    }
+    float xp3=nodes.get(p3).x - nodes.get(q).x;
+    float yp3=nodes.get(p3).y - nodes.get(q).y;
+    float ax = xp1 - xp;
+    float ay = yp1 - yp;
+    float bx = xp3 - xp;
+    float by = yp3 - yp;
+    float orientation = ax*by - ay*bx;
+    if (orientation>0) {
+//      print("a");
+      return p3;
+    } else {
+//      print("b");
+      return p1;
+    }
+  } else {
+    for (int e=0; e<edges.size(); e++) {
+      Edge ee = edges.get(e);
+      if (ee.visible) {
+        if (ee.s==q && ee.t!=p) {
+//          print("c("+ee.s+","+ee.t+")");
+          return ee.t;
+        }
+        if (ee.t==q && ee.s!=p) {
+//          print("d("+ee.t+","+ee.s+")");
+          return ee.s;
+        }
+      }
+    }
+  }
+  return -1;
+}
+
 void findOuter() {
+  
+  int p=0;
+  int q=1;
+  
+  print(p+" "+q+" ");
+  for (int repeat=0; repeat<nodes.size(); repeat++) {
+    int r=findNext(p, q);
+    print(r+" ");
+    if (r==p) {
+      break;
+    } else {
+      p=q;
+      q=r;
+    }
+  }
   return ;
 }
 

@@ -1,9 +1,10 @@
 //int dowker[]={6, 10, 12, 2, 4, 8}; //<>//
 //int dowker[]={4,8,14,16,2,18,20,22,10,12,6};
-int dowker[]={4, 10, 12, 14, 22, 2, 18, 20, 8, 6, 16};
+//int dowker[]={4, 10, 12, 14, 22, 2, 18, 20, 8, 6, 16};
 //int dowker[]={6, 8, 16, 14, 4, 18, 20, 2, 22, 12, 10};
 //int dowker[] = {6, 10, 16, 18, 14, 2, 20, 4, 22, 12, 8};
 //int dowker[] = {6, 12, 16, 18, 14, 4, 20, 22, 2, 8, 10};
+int dowker[] = {16,18,-22,-4,14,20,24,8,2,12,-6,10};
 ArrayList<Node> nodes;
 ArrayList<Edge>edges;
 int outer[];
@@ -15,11 +16,11 @@ void setup() {
   edges = new ArrayList<Edge>();
   int len = dowker.length;
   for (int i=0; i<len; i++) {
-    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 0, (dowker[i]>0)));// center
-    nodes.add(new Node(400+200*cos(PI*2*i/len)+30, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 1, (dowker[i]>0)));// right
-    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)-30, 2*i+1, dowker[i], i, 2, (dowker[i]>0)));// top
-    nodes.add(new Node(400+200*cos(PI*2*i/len)-30, 400-200*sin(PI*2*i/len), 2*i+1, dowker[i], i, 3, (dowker[i]>0)));// left
-    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)+30, 2*i+1, dowker[i], i, 4, (dowker[i]>0)));// bottom
+    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len), 2*i+1, abs(dowker[i]), i, 0, (dowker[i]>0)));// center
+    nodes.add(new Node(400+200*cos(PI*2*i/len)+30, 400-200*sin(PI*2*i/len), 2*i+1, abs(dowker[i]), i, 1, (dowker[i]>0)));// right
+    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)-30, 2*i+1, abs(dowker[i]), i, 2, (dowker[i]>0)));// top
+    nodes.add(new Node(400+200*cos(PI*2*i/len)-30, 400-200*sin(PI*2*i/len), 2*i+1, abs(dowker[i]), i, 3, (dowker[i]>0)));// left
+    nodes.add(new Node(400+200*cos(PI*2*i/len), 400-200*sin(PI*2*i/len)+30, 2*i+1, abs(dowker[i]), i, 4, (dowker[i]>0)));// bottom
     edges.add(new Edge(5*i, 5*i+1, true)); 
     edges.add(new Edge(5*i, 5*i+2, true)); 
     edges.add(new Edge(5*i, 5*i+3, true)); 
@@ -52,7 +53,7 @@ void setup() {
   // ここで，外周を探しなおす．
   findOuter();
   modify1();
-  outputFile("test.txt");
+  //outputFile("test.txt");
 }
 
 float cX = 400, cY = 400, rate=1.0;
@@ -281,7 +282,7 @@ int findNext(int p, int q) {
 }
 
 void findOuter() {
-  int outer_sub[] = new int[nodes.size()];
+  int outer_sub[] = new int[nodes.size()*2];
   int outer_sub_count=0;
   for (int pp=0; pp<nodes.size(); pp+=5) {
     for (int qq=pp+1; qq<pp+5; qq++) {
@@ -303,7 +304,7 @@ void findOuter() {
           }
         }
       }
-      if (outer_sub_count>outerCount) {
+      if (outer_sub_count>outerCount && outer_sub_count<20) {
         for (int k=0; k<outer_sub_count; k++) {
           outer[k] = outer_sub[k];
           print(outer_sub[k]+" ");
